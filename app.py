@@ -45,7 +45,7 @@ for key in ['authenticated', 'is_active_section', 'target_words', 'target_domain
         elif key == 'current_q_data': st.session_state[key] = None
         else: st.session_state[key] = False
 
-st.set_page_config(page_title="SAT Vocab Master", page_icon="ð", layout="centered")
+st.set_page_config(page_title="SAT Vocab Master", page_icon="🎓", layout="centered")
 
 st.markdown("""
 <style>
@@ -55,7 +55,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 if not st.session_state.authenticated:
-    st.title("ð SAT è¯æ±ç»æè®­ç»è¥")
+    st.title("🎓 SAT 词汇终极训练营")
     st.markdown("### Powered by 1500+ Elite SAT Vocab")
     
     init_db()
@@ -63,34 +63,34 @@ if not st.session_state.authenticated:
     free_spots_left = max(0, 100 - db["free_users"])
     
     if free_spots_left > 0:
-        st.info(f"ð å°é²ç¦å©ï¼å 100 åç¨æ·åææç ï¼(å©ä½åé¢: {free_spots_left})")
+        st.info(f"🎉 尝鲜福利：前 100 名用户免授权码！(剩余名额: {free_spots_left})")
     else:
-        st.warning("â ï¸ åè´¹åé¢å·²æ»¡ãè¯·åç®¡çåç´¢è¦ 6 ä½ææç ã")
+        st.warning("⚠️ 免费名额已满。请向管理员索要 6 位授权码。")
     
     st.markdown("---")
     
-    api_key = st.text_input("ð è¯·è¾å¥æ¨ç Google API Key (å¿å¡«):", type="password")
-    auth_code = st.text_input("ð« è¯·è¾å¥ 6 ä½ææç  (å100åç´æ¥çç©º):", type="password")
+    api_key = st.text_input("🔑 请输入您的 Google API Key (必填):", type="password")
+    auth_code = st.text_input("🎫 请输入 6 位授权码 (前100名直接留空):", type="password")
     
     st.markdown("---")
     
-    if st.button("ð è¿å¥ç³»ç» (Access System)", type="primary", use_container_width=True):
+    if st.button("🚀 进入系统 (Access System)", type="primary", use_container_width=True):
         if not api_key:
-            st.error("API Key ä¸è½ä¸ºç©ºï¼")
+            st.error("API Key 不能为空！")
         else:
             passed = False
             if free_spots_left > 0 and not auth_code:
                 db["free_users"] += 1
                 save_db(db, DB_FILE)
                 passed = True
-                st.success("åå¯éªè¯éè¿ï¼æ­£å¨è¿å¥ç³»ç»...")
+                st.success("免密验证通过！正在进入系统...")
             elif auth_code in VALID_CODES:
                 passed = True
-                st.success("ææç éªè¯æåï¼æ­£å¨è¿å¥ç³»ç»...")
+                st.success("授权码验证成功！正在进入系统...")
             elif free_spots_left <= 0 and not auth_code:
-                st.error("â åè´¹åé¢å·²æ»¡ï¼å¿é¡»è¾å¥ææçææç ã")
+                st.error("❌ 免费名额已满，必须输入有效的授权码。")
             else:
-                st.error("â ææç æ æã")
+                st.error("❌ 授权码无效。")
                 
             if passed:
                 st.session_state.api_key = api_key
@@ -110,17 +110,17 @@ else:
             
     available_models = get_models()
     if not available_models:
-        st.error("â Invalid API Key or Quota Exceeded.")
-        if st.button("â¬ï¸ Logout & Retry"):
+        st.error("❌ Invalid API Key or Quota Exceeded.")
+        if st.button("⬅️ Logout & Retry"):
             st.session_state.authenticated = False
             st.rerun()
         st.stop()
         
-    st.sidebar.title("âï¸ Settings / è®¾ç½®")
+    st.sidebar.title("⚙️ Settings / 设置")
     
-    ui_lang = st.sidebar.radio("ð Language / çé¢è¯­è¨", ["English", "ä¸­æ/English"])
+    ui_lang = st.sidebar.radio("🌐 Language / 界面语言", ["English", "中文/English"])
     def t(en, zh):
-        return zh if ui_lang == "ä¸­æ/English" else en
+        return zh if ui_lang == "中文/English" else en
 
     flash_idx = 0
     for i, m in enumerate(available_models):
@@ -132,7 +132,7 @@ else:
     model = genai.GenerativeModel(selected_model.replace("models/", ""))
     
     st.sidebar.markdown("---")
-    selected_mode = st.sidebar.selectbox(t("ð¯ Section Mode", "ð¯ åºé¢æ¨¡å¼"), [
+    selected_mode = st.sidebar.selectbox(t("🎯 Section Mode", "🎯 出题模式"), [
         "Standard (Mixed 8-8-4)", 
         "All Core (Medium)", 
         "All Advanced (Hard)", 
@@ -142,11 +142,11 @@ else:
     core_list, adv_list, sprint_list = load_vocab()
 
     if not st.session_state.is_active_section:
-        st.title(t("ð SAT Vocab Master Class", "ð SAT è¯æ±ç»æè®­ç»è¥"))
-        st.info(t("ð¡ TIP for Mobile Users: Tap the `>` arrow in the top-left corner to open sidebar!", "ð¡ ææºç¨æ·æç¤ºï¼ç¹å»å·¦ä¸è§ç `>` ç®­å¤´å¯æå¼ä¾§è¾¹æ è®¾ç½®è¯­è¨åæ¨¡å¼ï¼"))
-        st.markdown(f"**{t('Current Mode:', 'å½åæ¨¡å¼ï¼')}** `{selected_mode}`")
+        st.title(t("🎓 SAT Vocab Master Class", "🎓 SAT 词汇终极训练营"))
+        st.info(t("💡 TIP for Mobile Users: Tap the `>` arrow in the top-left corner to open sidebar!", "💡 手机用户提示：点击左上角的 `>` 箭头可打开侧边栏设置语言和模式！"))
+        st.markdown(f"**{t('Current Mode:', '当前模式：')}** `{selected_mode}`")
         
-        start_btn = t("ð Start 20-Question Section", "ð å¼å§ 20 é¢æµè¯")
+        start_btn = t("🚀 Start 20-Question Section", "🚀 开始 20 题测试")
         if st.button(start_btn, type="primary", use_container_width=True):
             if "Standard" in selected_mode:
                 words = random.sample(core_list, min(8, len(core_list))) + \
@@ -174,8 +174,8 @@ else:
         total_target = 20
         
         st.sidebar.progress((current_idx) / total_target)
-        st.sidebar.write(f"**{t('Question', 'å½åè¿åº¦')} {current_idx + 1} / {total_target}**")
-        if st.sidebar.button(t("â¹ï¸ End Section Early", "â¹ï¸ æåç»ææµè¯")):
+        st.sidebar.write(f"**{t('Question', '当前进度')} {current_idx + 1} / {total_target}**")
+        if st.sidebar.button(t("⏹️ End Section Early", "⏹️ 提前结束测试")):
             st.session_state.is_active_section = False
             st.rerun()
 
@@ -183,10 +183,10 @@ else:
             target_w = st.session_state.target_words[current_idx]
             target_d = st.session_state.target_domains[current_idx]
             
-            loading_msg = f"ð§  Generating Question {current_idx + 1}..." if ui_lang == "English" else f"ð§  æ­£å¨æéçæç¬¬ {current_idx + 1} é¢ï¼è¯·ç¨å..."
+            loading_msg = f"🧠 Generating Question {current_idx + 1}..." if ui_lang == "English" else f"🧠 正在极速生成第 {current_idx + 1} 题，请稍候..."
             with st.spinner(loading_msg):
                 
-                lang_instruction = "Write the 'analysis' entirely in concise English." if ui_lang == "English" else "Write the 'analysis' ENTIRELY IN CHINESE (ä¸­æè§£æ), explaining the target word's meaning and why the correct option fits contextually."
+                lang_instruction = "Write the 'analysis' entirely in concise English." if ui_lang == "English" else "Write the 'analysis' ENTIRELY IN CHINESE (中文解析), explaining the target word's meaning and why the correct option fits contextually."
                 
                 prompt = f"""
                 You are an expert SAT test creator. Create ONE high-difficulty SAT Reading 'Words in Context' question.
@@ -216,58 +216,58 @@ else:
                     st.session_state.current_q_data = q_data
                     st.rerun()
                 except Exception as e:
-                    st.error(t(f"Generation failed. Error: {e}", f"çæå¤±è´¥ï¼ç½ç»å¯è½æ³¢å¨ãéè¯¯: {e}"))
-                    if st.button(t("ð Retry Generation", "ð éæ°çææ­¤é¢")):
+                    st.error(t(f"Generation failed. Error: {e}", f"生成失败，网络可能波动。错误: {e}"))
+                    if st.button(t("🔄 Retry Generation", "🔄 重新生成此题")):
                         st.rerun()
                     st.stop()
         
         q_data = st.session_state.current_q_data
         
         if "Standard" in selected_mode:
-            if current_idx < 8: difficulty_badge = "ð¢ Core"
-            elif current_idx < 16: difficulty_badge = "ð¡ Advanced"
-            else: difficulty_badge = "ð´ Sprint"
+            if current_idx < 8: difficulty_badge = "🟢 Core"
+            elif current_idx < 16: difficulty_badge = "🟡 Advanced"
+            else: difficulty_badge = "🔴 Sprint"
         else:
-            difficulty_badge = f"ðµ {selected_mode.split()[0]} {selected_mode.split()[1]}"
+            difficulty_badge = f"🔵 {selected_mode.split()[0]} {selected_mode.split()[1]}"
 
-        st.caption(f"**{t('Difficulty:', 'é¾åº¦:')}** {difficulty_badge} | ð·ï¸ **{t('Domain:', 'é¢å:')}** {q_data.get('domain', 'Academic')}")
-        st.markdown(f"**{t('Passage:', 'éè¯»éæ®µ (Passage):')}**\n\n{q_data.get('passage', '')}")
+        st.caption(f"**{t('Difficulty:', '难度:')}** {difficulty_badge} | 🏷️ **{t('Domain:', '领域:')}** {q_data.get('domain', 'Academic')}")
+        st.markdown(f"**{t('Passage:', '阅读选段 (Passage):')}**\n\n{q_data.get('passage', '')}")
         
         options = q_data.get('options', ['A', 'B', 'C', 'D'])
-        choices = options + [t("N (Skip / Unsure)", "N (è·³è¿ / ä¸ç¡®å®)")]
+        choices = options + [t("N (Skip / Unsure)", "N (跳过 / 不确定)")]
         
-        user_choice = st.radio(t("Select your answer:", "è¯·éæ©æä½³å¡«ç©ºè¯ï¼"), choices, index=None, disabled=st.session_state.answered)
+        user_choice = st.radio(t("Select your answer:", "请选择最佳填空词："), choices, index=None, disabled=st.session_state.answered)
         
         col1, col2 = st.columns([1, 1])
         with col1:
             if not st.session_state.answered:
-                if st.button(t("â Submit Answer", "â æäº¤ç­æ¡"), type="primary"):
+                if st.button(t("✅ Submit Answer", "✅ 提交答案"), type="primary"):
                     if user_choice:
                         st.session_state.answered = True
                         st.rerun()
                     else:
-                        st.warning(t("Please select an option first!", "è¯·åéæ©ä¸ä¸ªéé¡¹ï¼"))
+                        st.warning(t("Please select an option first!", "请先选择一个选项！"))
         with col2:
-            if st.button(t("â ï¸ Flag Question", "â ï¸ æ è®°æ¥é (å­å¥éé¢æ¬)")):
+            if st.button(t("⚠️ Flag Question", "⚠️ 标记报错 (存入错题本)")):
                 reviews = load_db(REVIEW_DB)
                 q_data["flagged_at"] = time.strftime("%Y-%m-%d %H:%M:%S")
                 reviews.append(q_data)
                 save_db(reviews, REVIEW_DB)
-                st.toast(t("Flagged and saved for review!", "å·²æåè®°å½è³éé¢æ¬ï¼ç­å¾æå¸å¤æ ¸ï¼"), icon="â")
+                st.toast(t("Flagged and saved for review!", "已成功记录至错题本，等待教师复核！"))
 
         if st.session_state.answered:
             st.divider()
             correct_ans = options[int(q_data.get('correct_index', 0))]
             if user_choice == correct_ans:
-                st.success(t(f"ð¯ Correct! (Answer: {correct_ans})", f"ð¯ åç­æ­£ç¡®ï¼ (æ åç­æ¡: {correct_ans})"))
+                st.success(t(f"🎯 Correct! (Answer: {correct_ans})", f"🎯 回答正确！ (标准答案: {correct_ans})"))
             elif user_choice and user_choice.startswith("N"):
-                st.warning(t(f"â© You skipped. (Answer: {correct_ans})", f"â© æ¨è·³è¿äºæ­¤é¢ã (æ åç­æ¡: {correct_ans})"))
+                st.warning(t(f"⏩ You skipped. (Answer: {correct_ans})", f"⏩ 您跳过了此题。 (标准答案: {correct_ans})"))
             else:
-                st.error(t(f"â Incorrect. (Answer: {correct_ans})", f"â åç­éè¯¯ã (æ åç­æ¡: {correct_ans})"))
+                st.error(t(f"❌ Incorrect. (Answer: {correct_ans})", f"❌ 回答错误。 (标准答案: {correct_ans})"))
                 
-            st.info(f"**ð§  {t('Analysis:', 'æ·±åº¦è§£æ:')}**\n\n{q_data.get('analysis', '')}")
+            st.info(f"**🧠 {t('Analysis:', '深度解析:')}**\n\n{q_data.get('analysis', '')}")
             
-            if st.button(t("â¡ï¸ Next Question", "â¡ï¸ ä¸ä¸é¢ (æéçæ)"), type="primary", use_container_width=True):
+            if st.button(t("➡️ Next Question", "➡️ 下一题 (极速生成)"), type="primary", use_container_width=True):
                 if current_idx + 1 < total_target:
                     st.session_state.current_q_idx += 1
                     st.session_state.answered = False
@@ -278,6 +278,8 @@ else:
                     st.session_state.answered = False
                     st.session_state.current_q_data = None
                     st.balloons()
-                    st.success(t("ð Excellent! Section completed!", "ð å¤ªæ£äºï¼æ¨å·²æåå®ææ¬ååçææè®­ç»ï¼"))
+                    st.success(t("🎉 Excellent! Section completed!", "🎉 太棒了！您已成功完成本单元的所有训练！"))
                     time.sleep(3)
                     st.rerun()
+
+
